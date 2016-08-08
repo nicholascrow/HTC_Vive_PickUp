@@ -20,21 +20,33 @@ public class PickUp_Vive : MonoBehaviour {
 
     //when the scene starts
     void Awake() {
+
+        //we can't select anything until the controllers are tracked
         selectableObj = null;
+        selectedObj = null;
+
+        //controller tracking
         trackedObj = GetComponent<SteamVR_TrackedObject>();
     }
 
     // Update is called once per frame
     void Update() {
-        if(destroySelected && joint != null) {
-
-            RemoveJoint();
-        }
         var device = SteamVR_Controller.Input((int)trackedObj.index);
 
+        //break the joint if the object we are holding is destroyed
+        if(destroySelected && joint != null) {
+            //destroy the joint
+            Object.DestroyImmediate(joint);
+            //set it to null
+            joint = null;
+        }
+
+        //if we can select an object then grab it.
         if(joint == null && selectableObj != null && device.GetTouchDown(SteamVR_Controller.ButtonMask.Grip)) {
             AddJoint();
         }
+
+        //if we are holding an object lets stop holding it
         else if(joint != null && device.GetTouchUp(SteamVR_Controller.ButtonMask.Grip)) {
             RemoveJoint();
         }

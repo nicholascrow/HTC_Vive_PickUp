@@ -2,8 +2,13 @@
 using System.Collections;
 [RequireComponent(typeof(Collider))]
 public class Can_Pickup : MonoBehaviour {
+
+    //is this object currently being held?
     public int isBeingHeld = 0;
+
+    //when this object is destroyed then we need to make sure that the joint is broken
     void OnDestroy() {
+
         PickUp_Vive.destroySelected = true;
     }
 
@@ -19,6 +24,9 @@ public class Can_Pickup : MonoBehaviour {
         }
         else if(GetComponent<Collider>().GetType() == typeof(SphereCollider)) {
             Gizmos.DrawWireSphere(GetComponent<SphereCollider>().center, GetComponent<SphereCollider>().radius);
+        }
+        else if(GetComponent<Collider>().GetType() == typeof(CapsuleCollider)) {
+            Gizmos.DrawWireCube(GetComponent<CapsuleCollider>().center + transform.position, new Vector3(GetComponent<CapsuleCollider>().radius * 2, GetComponent<CapsuleCollider>().height, GetComponent<CapsuleCollider>().radius*2));
         }
     }
 }
